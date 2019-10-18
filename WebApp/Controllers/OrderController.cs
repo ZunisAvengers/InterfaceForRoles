@@ -22,6 +22,7 @@ namespace WebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             return await _context.Orders
+                //.Where(o => o.User == I)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
         }
