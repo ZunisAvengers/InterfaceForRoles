@@ -12,6 +12,8 @@ namespace WebApp.Models
         public string Address { get; set; }
         public string Plan { get; set; }
         public DateTime DateOrder { get; set; }
+        public DateTime? DateInstalling { get; set; }
+        public DateTime? DateCompliteInstalling { get; set; }
         public State State { get; set; }
     }
 }

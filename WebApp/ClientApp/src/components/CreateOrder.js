@@ -17,14 +17,8 @@ export class CreateOrder extends Component{
     async handleSubmit(e){
         e.preventDefault()
         if (this.state.addressValid === true && this.state.planValid === true){
-            let data = JSON.stringify({"address":this.state.Address, "plan":this.state.Plan,"dataorder":Date.now.toString()});
-            await fetch('api/order',{
-                method:"POST",
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body:data
-            });
+            let data = JSON.stringify({"address":this.state.Address, "plan":this.state.Plan});
+            this.props.onCreate(data);
             this.setState({Completed:true})
         }
     }
@@ -62,7 +56,7 @@ export class CreateOrder extends Component{
                                 <textarea type="text" className="form-control"  value={e.state.Plan} onChange={e.onPlan}></textarea>
                                 <span className="text-danger">{planAlert}</span>
                             </div>
-                            <input type="submit" value="Отправить"/>
+                            <input type="submit" value="Заказать"/>
                         
                     </form>
                 </div>
@@ -79,10 +73,10 @@ export class CreateOrder extends Component{
         ? CreateOrder.renderCompleted()
         : CreateOrder.renderOrderForm(this) 
         return(
-            <div className="row">
-                <h2>Заказать</h2>
+            <center>
                 {contents}
-            </div>
+            
+            </center>
         );
     }
 }

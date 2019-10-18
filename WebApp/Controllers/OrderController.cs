@@ -22,15 +22,13 @@ namespace WebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             return await _context.Orders
-                //.Include(o => o.User)
-                .Include(o => o.State)
+                .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
             Order order = await _context.Orders
-                //.Include(o => o.User)
                 .Include(o => o.State)
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order != null) return order;
@@ -39,7 +37,7 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {
-            order.DateOrder = DateTime.Today;
+            order.DateOrder = DateTime.Now;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
