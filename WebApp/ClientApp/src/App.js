@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
-import { CreateOrder } from './components/CreateOrder';
 import { ListOrder } from './components/ListOrder';
-
+import { AuthorizeRotePage } from './components/api-authorization/AuthorizeRotePage';
+import AuthorizeRoutes from './components/api-authorization/AuthorizeRoutes';
 
 import './custom.css'
 
@@ -17,7 +15,8 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
-        <Route path='/list-order' component={ListOrder} />
+        <AuthorizeRotePage path='/list-order' component={ListOrder} />
+        <Route path='/authentication' component={AuthorizeRoutes} />
       </Layout>
     );
   }

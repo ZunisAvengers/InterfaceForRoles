@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { AuthorizeMenu } from './api-authorization/AuthorizeMenu'
 import './NavMenu.css';
 
 export class NavMenu extends Component {
@@ -32,11 +33,12 @@ export class NavMenu extends Component {
               <ul className="navbar-nav flex-grow">
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                
+                </NavItem>                
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/list-order">Заказы</NavLink>
                 </NavItem>
+                <AuthorizeMenu>
+                </AuthorizeMenu>
               </ul>
             </Collapse>
           </Container>
