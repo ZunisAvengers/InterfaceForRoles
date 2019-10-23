@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import authService from './Identity'
+import identity from './Identity'
 
 export class Register extends Component{
     constructor(props){
@@ -18,7 +18,7 @@ export class Register extends Component{
             confirmPasswordValid:false,
             phoneValid:false
         }
-        this.onLogin = this.onLogin.bind(this),
+        this.onLogin = this.onLogin.bind(this)
         this.onFirstName = this.onFirstName.bind(this)
         this.onLastName = this.onLastName.bind(this)
         this.onPassword = this.onPassword.bind(this)
@@ -27,67 +27,90 @@ export class Register extends Component{
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     async handleSubmit(e){
-        const response = await fetch('api/identity/Reg',{
-            method:"POST",
-            body: JSON.stringify({
-                "login":this.state.login,
-                "password":this.state.password,
-                "firstName":this.state.firstName,
-                "lastName":this.state.lastName,
-                "phone":this.state.phone,
-                })
-        });
-        const data = await response.json();
-        this.setState({Completed:true})
-        authService.onLogIn(data);
+        e.preventDefault()
+        var data = {
+            login:this.state.login,
+            password:this.state.password,
+            firstName:this.state.firstName,
+            lastName:this.state.lastName,
+            phone:this.state.phone,
+            }
+        var status = await identity.register(data)
+        //if (staus == 404)
+    }
+    static passwordIsValid(password){
+        return password > 5
+    }
+    static confirmPasswordIsValid(password, confirmPassword){
+        return password === confirmPassword
+    }
+    onLogin(e){
+        var login = e.target.value
+        this.setState({login: login})
+    }
+    onFirstName(e){
+        this.setState({firstName: e.target.value})
+    }
+    onLastName(e){
+        this.setState({lastName: e.target.value})
+    }
+    onPassword(e){
+        var password = e.target.value,
+        valid = Register.passwordIsValid(password)
+        this.setState({password: password, passwordValid: valid})
+    }
+    onConfirmPassword(e){
+        var confirmPassword = e.target.value,
+        valid = Register.confirmPasswordIsValid(this.setState.password, confirmPassword)
+        this.setState({confirmPassword: confirmPassword, confirmPasswordValid: valid})
+    }
+    onPhone(e){
+        this.setState({phone: e.target.value})
     }
     render(){
+        var firstNameAlert = this.state.firstNameValid === true ? "" : "Укажите ваше Имя",
+        lastNameAlert = this.state.lastNameValid === true ? "" : "Укажите вашу Фамилию",
+        loginAlert = this.state.loginValid === true ? "" : "Укажите ваш Логин",
+        passwordAlert = this.state.passwordValid === true ? "" : "Укажите ваш Пароль",
+        confirmPasswordAlert = this.state.confirmPasswordValid === true ? "" : "Пароли не совпадают",
+        phoneAlert = this.state.phoneValid === true ? "" : "Укажите ваш Номер телефона";
 
         return(
-            <h2>Регистрация</h2>
-            
-        );
-    }
-    static renderRegistrationForm(e){
-        // firstNameAlert = e.state.firstNameValid === true ? "" : "Укажите ваше Имя";
-        // lastNameAlert = e.state.lastNameValid === true ? "" : "Укажите вашу Фамилию";
-        // loginAlert = e.state.loginValid === true ? "" : "Укажите ваш Логин";
-        // passwordAlert = e.state.passwordValid === true ? "" : "Укажите ваш Пароль";
-        // confirmPasswordAlert = e.state.confirmPasswordValid === true ? "" : "Пароли не совпадают";
-        // phoneAlert = e.state.phoneValid === true ? "" : "Укажите ваш Номер телефона";
-
-        return(<form  onSubmit={e.handleSubmit}>
-            <div className="form-group">
-                <label className="control-label">Укажите ваше Имя:</label>
-                <input type="text" className="form-control"  value={e.state.firstName} onChange={e.onFirstName}/>
-                <span className="text-danger">{firstNameAlert}</span>
+            <div className="row"> 
+                <form  onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваше Имя:</label>
+                        <input type="text" className="form-control"  value={this.state.firstName} onChange={this.onFirstName}/>
+                        <span className="text-danger">{firstNameAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Укажите вашу Фамилию:</label>
+                        <input type="text" className="form-control"  value={this.state.lastName} onChange={this.onLastName}/>
+                        <span className="text-danger">{lastNameAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваш Логин:</label>
+                        <input type="text" className="form-control"  value={this.state.login} onChange={this.onLogin}/>
+                        <span className="text-danger">{loginAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваш Номер телефона:</label>
+                        <input type="text" className="form-control"  value={this.state.phone} onChange={this.onPhone}/>
+                        <span className="text-danger">{phoneAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваш Пароль:</label>
+                        <input type="password" className="form-control"  value={this.state.password} onChange={this.onPassword}/>
+                        <span className="text-danger">{passwordAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Повторите ваш Пароль:</label>
+                        <input type="password" className="form-control"  value={this.state.confirmPassword} onChange={this.onConfirmPassword}/>
+                        <span className="text-danger">{confirmPasswordAlert}</span>
+                    </div>
+                    <input type="submit" value="Зарегистрироваться"/>
+                </form>
             </div>
-            <div className="form-group">
-                <label className="control-label">Укажите вашу Фамилию:</label>
-                <input type="text" className="form-control"  value={e.state.lastName} onChange={e.onLastName}/>
-                <span className="text-danger">{lastNameAlert}</span>
-            </div>
-            <div className="form-group">
-                <label className="control-label">Укажите ваш Логин:</label>
-                <input type="text" className="form-control"  value={e.state.login} onChange={e.onLogin}/>
-                <span className="text-danger">{loginAlert}</span>
-            </div>
-            <div className="form-group">
-                <label className="control-label">Укажите ваш Номер телефона:</label>
-                <input type="text" className="form-control"  value={e.state.phone} onChange={e.onPhone}/>
-                <span className="text-danger">{passwordAlert}</span>
-            </div>
-            <div className="form-group">
-                <label className="control-label">Укажите ваш Пароль:</label>
-                <input type="password" className="form-control"  value={e.state.password} onChange={e.onPassword}/>
-                <span className="text-danger">{passwordAlert}</span>
-            </div>
-            <div className="form-group">
-                <label className="control-label">Повторите ваш Пароль:</label>
-                <input type="password" className="form-control"  value={e.state.confirmPassword} onChange={e.onConfirmPassword}/>
-                <span className="text-danger">{confirmPasswordAlert}</span>
-            </div>
-            <input type="submit" value="Зарегистрироваться"/>
-        </form>)
+            )
     }
 }

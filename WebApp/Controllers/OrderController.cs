@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
@@ -10,6 +10,7 @@ using WebApp.Models;
 namespace WebApp.Controllers
 {
     [Route("api/order")]
+    [Authorize]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -22,7 +23,8 @@ namespace WebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             return await _context.Orders
-                //.Where(o => o.User == I)
+                .Include(o => o.Сustomer)
+                .Where(o => o.Сustomer.Login == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
         }

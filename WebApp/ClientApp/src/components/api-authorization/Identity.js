@@ -4,23 +4,43 @@ export class Identity {
     _isAuthenticated = false;
     //claim = null;
         
-    static LogIn(data){
-        this._login = data.login
-        this._role = data.role
+    async logIn(data){
+        const response = await fetch('api/identity',{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({"login":data.login, "password":data.password})
+        })
+        localStorage.setItem("token", response.jwt)
+        console.log(response.json())
         this._isAuthenticated = true
+        return response.status
+        
     }
-    static Register(data){
-        this._login = data.login
-        this._role = data.role
-        this._isAuthenticated = true
+    async register(data){
+        
+        const response = await fetch('api/identity/Reg',{
+            method:"POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({
+                "login":data.login,
+                "password":data.password,
+                "firstName":data.firstName,
+                "lastName":data.lastName,
+                "phone":data.phone
+            })
+        })
+        if (response.status != 415) this.logIn(data)
+        return response.status
     }
     static LogOut(){
-        this._login = null
-        this._role = null
         this._isAuthenticated = false
     }
-    static get instance() { return authService }
+    static get instance() { return Identity }
 }
-const authService = new Identity();
+const identity = new Identity();
 
-export default authService;
+export default identity;

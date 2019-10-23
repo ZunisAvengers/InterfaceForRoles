@@ -1,29 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using WebApp.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApp.Controllers
 {
     [Route("api/identity")]
+    [AllowAnonymous]
     public class IdentityController : Controller
     {
         private readonly ApplicationContext _context;
-
         public IdentityController(ApplicationContext context)
         {
             _context = context;
         }
-        [HttpPost("/Reg")]
-        public async Task<ActionResult<User>> Reg(User model)
+        [HttpPost]
+        public async Task<ActionResult<string>> Post([FromBody]AuthenticationRequest authRequest, [FromServices] IJwtSigningEncodingKey signingEncodingKey)
+        {
+            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == authRequest.Login && u.Password == authRequest.Password);
+            if (user == null) return NotFound();
+            var claims = new Claim[]
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: "WebApp",
+                audience: "WebAppClient",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: new SigningCredentials(
+                    signingEncodingKey.GetKey(),
+                    signingEncodingKey.SigningAlgorithm)
+            );
+
+            string jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            var response = new
+            {
+                Login = user.Login,
+                Role = user.Role.Name,
+                jwt = jwtToken
+            };
+            string json = JsonSerializer.Serialize(response);
+            return (json);
+        }
+        [HttpPost("Reg")]
+        public async Task<ActionResult<User>> Reg([FromBody]User model)
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
             if (user == null)
@@ -41,39 +72,9 @@ namespace WebApp.Controllers
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
-                await Authenticate(user);
-                return user;
+                return Ok();
             }
             return BadRequest();
         }
-        [HttpPost("/Login")]
-        public async Task<ActionResult<User>> LogIn(User model)
-        {
-            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
-            if (user != null)
-            {
-                await Authenticate(user);
-                return user;
-            }
-            return NotFound();
-        }
-        [NonAction]
-        public async Task Authenticate(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name)
-            };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
-       [HttpPost("/LogOut")]
-       public async Task LogOut()
-       {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-       }
     }
 }

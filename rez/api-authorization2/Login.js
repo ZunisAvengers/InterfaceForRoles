@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import identity from './Identity'
+import authService from './Identity'
 
 export class Login extends Component{
     constructor(props){
@@ -19,15 +19,18 @@ export class Login extends Component{
     async handleSubmit(e){
         e.preventDefault()
         if (this.state.loginValid === true && this.state.passwordValid === true){
-            var data={
-                login: this.state.login,
-                password: this.state.password
-            }
-            var status = await identity.logIn(data);
-            if (status == 404){
+            const response = await fetch('api/identity/Login',{
+                method:"POST",
+                body: JSON.stringify({"login":this.state.login, "password":this.state.password}),
+                
+            });
+            //this.props.onLogIn(data);
+            if (response.status == 404){
                 this.setState({userValid:false})    
             }else{
+                const data = await response.json();
                 this.setState({Completed:true})
+                authService.onLogIn(data);
             }            
         }
     }
@@ -51,21 +54,23 @@ export class Login extends Component{
         var loginAlert = e.state.loginValid === true ? "" : "Укажите ваш логин";
         var passwordAlert = e.state.passwordValid === true ? "" : "Укажите ваш пароль";
         var userAlert = e.state.userValid === true ? "" : "Неверное имя пользователя или пароль";
-        return(            
-                <form onSubmit={e.handleSubmit}>                    
-                        <div className="form-group">
-                            <label className="control-label">Укажите ваш Логин:</label>
-                            <input type="text" className="form-control"  value={e.state.login} onChange={e.onLogin}/>
-                            <span className="text-danger">{loginAlert}</span>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label">Укажите ваш Пароль:</label>
-                            <input type="password" className="form-control"  value={e.state.password} onChange={e.onPassword}></input>
-                            <span className="text-danger">{passwordAlert}</span>
-                        </div>
-                        <span className="text-danger">{userAlert}</span>
-                        <input type="submit" value="Войти"/>                    
-                </form>            
+        return(
+            <form onSubmit={e.handleSubmit}>
+                
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваш Логин:</label>
+                        <input type="text" className="form-control"  value={e.state.login} onChange={e.onLogin}/>
+                        <span className="text-danger">{loginAlert}</span>
+                    </div>
+                    <div className="form-group">
+                        <label className="control-label">Укажите ваш Пароль:</label>
+                        <input type="password" className="form-control"  value={e.state.password} onChange={e.onPassword}></input>
+                        <span className="text-danger">{passwordAlert}</span>
+                    </div>
+                    <span className="text-danger">{userAlert}</span>
+                    <input type="submit" value="Войти"/>
+                
+            </form>
         )
     }
     static renderCompleted(){
@@ -79,9 +84,9 @@ export class Login extends Component{
         : Login.renderLogInForm(this) 
         return(
             <div className="row">
-            <center>
-                {contents}
-            </center>
+                <center>
+                    {contents}
+                </center>
             </div>
         );
     }
