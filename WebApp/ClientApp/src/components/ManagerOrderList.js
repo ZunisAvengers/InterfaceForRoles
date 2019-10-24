@@ -9,6 +9,9 @@ export class ManagerList extends Component{
             sortState:0,
             sortDate:null
         }
-
+        this.onDelete = this.onDelete.bind(this)
+        this.onAllow = this.onAllow.bind(this)
     }
+
+
 }

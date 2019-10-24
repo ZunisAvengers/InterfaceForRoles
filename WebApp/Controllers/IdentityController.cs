@@ -29,7 +29,7 @@ namespace WebApp.Controllers
             if (user == null) return NotFound();
             var claims = new Claim[]
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.Name)
             };
 
@@ -80,7 +80,7 @@ namespace WebApp.Controllers
         [HttpGet("Profile")]
         public async Task<ActionResult<string>> Profile()
         {
-            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             var response = new
             {
                 Login = user.Login,

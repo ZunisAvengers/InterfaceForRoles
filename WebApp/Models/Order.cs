@@ -8,7 +8,7 @@ namespace WebApp.Models
     public class Order
     {
         public Guid Id { get; set; }
-        public User Сustomer { get; set; }
+        public User Customer { get; set; }
         public string Address { get; set; }
         public string Plan { get; set; }
         public DateTime DateOrder { get; set; }
