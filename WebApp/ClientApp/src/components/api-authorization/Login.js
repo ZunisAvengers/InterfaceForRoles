@@ -78,11 +78,11 @@ export class Login extends Component{
         ? Login.renderCompleted()
         : Login.renderLogInForm(this) 
         return(
-            <div className="row">
             <center>
+            <div className="row">
                 {contents}
-            </center>
             </div>
+            </center>
         );
     }
 }

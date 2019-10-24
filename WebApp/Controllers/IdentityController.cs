@@ -37,7 +37,7 @@ namespace WebApp.Controllers
                 issuer: "WebApp",
                 audience: "WebAppClient",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddHours(3),
                 signingCredentials: new SigningCredentials(
                     signingEncodingKey.GetKey(),
                     signingEncodingKey.SigningAlgorithm)
@@ -75,6 +75,19 @@ namespace WebApp.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+        [Authorize]
+        [HttpGet("Profile")]
+        public async Task<ActionResult<string>> Profile()
+        {
+            User user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            var response = new
+            {
+                Login = user.Login,
+                Role = user.Role.Name
+            };
+            string json = JsonSerializer.Serialize(response);
+            return (json);
         }
     }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import authService from './Identity'
+import identity from './Identity'
 
 export class AuthorizeRotePage extends Component {
     constructor(props) {
@@ -13,12 +13,17 @@ export class AuthorizeRotePage extends Component {
     }
 
     componentDidMount() {
+        this._subscription = identity.subscribe(() => this.authenticationChanged());
         this.populateAuthenticationState();
+    }
+
+    componentWillUnmount() {
+        identity.unsubscribe(this._subscription);
     }
 
     render() {
         const { ready, authenticated } = this.state;
-        const redirectUrl = '/authentication/Login'
+        const redirectUrl = `/authentication/Login`
         if (!ready) {
             return <div></div>;
         } else {
@@ -35,12 +40,12 @@ export class AuthorizeRotePage extends Component {
     }
 
     async populateAuthenticationState() {
-        
-        this.setState({ ready: true, authenticated: authService.isAuthenticated });
+        const authenticated = await identity._isAuthenticated
+        this.setState({ ready: true, authenticated });
     }
 
     async authenticationChanged() {
         this.setState({ ready: false, authenticated: false });
-        this.populateAuthenticationState();
+        await this.populateAuthenticationState();
     }
 }

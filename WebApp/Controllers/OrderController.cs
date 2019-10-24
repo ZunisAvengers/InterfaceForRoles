@@ -23,7 +23,6 @@ namespace WebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             return await _context.Orders
-                .Include(o => o.Сustomer)
                 .Where(o => o.Сustomer.Login == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
@@ -32,7 +31,6 @@ namespace WebApp.Controllers
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
             Order order = await _context.Orders
-                .Include(o => o.State)
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order != null) return order;
             return NotFound();
@@ -41,6 +39,7 @@ namespace WebApp.Controllers
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {
             order.DateOrder = DateTime.Now;
+            order.Сustomer = await _context.Users.FirstOrDefaultAsync(u => u.Login == User.Identity.Name);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);

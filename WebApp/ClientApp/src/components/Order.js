@@ -9,7 +9,6 @@ export class Order extends Component{
     }
     static toDate(buf){
         var month = "",date = new Date(buf)
-        console.log(date)
         switch(date.getMonth()){
             case 0 : month = "Янв";break;
             case 1 : month = "Фев";break;

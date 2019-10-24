@@ -11,6 +11,7 @@ namespace WebApp.Models
         WaitingForInstallation,//-ожидание установки
         Installating,//-установка
         InstallatingСompleted,//-установка выполнена
-        Completed//-выполнена (и проверено)
+        Completed,//-выполнена (и проверено)
+        Canceled//- отменено
     }
 }

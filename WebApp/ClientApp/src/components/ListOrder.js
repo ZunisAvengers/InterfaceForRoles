@@ -29,13 +29,15 @@ export class ListOrder extends Component{
         await fetch('api/order',{
             method:"POST",
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Bearer ' + localStorage.token
             },
             body:data
         });
         this.setState({loading:true})
-        this.loadOrders()
+        
         setTimeout(this.setState({showCreate:false}),5000)
+        this.loadOrders()
     }
     ShowCreateOrder(e){
         if (this.state.showCreate == true) this.setState({showCreate: false})
@@ -62,10 +64,13 @@ export class ListOrder extends Component{
     }
     async loadOrders() {
         const response = await fetch('api/order',{
-            method:'GET'
+            method:'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Bearer ' + localStorage.token
+            }
         });
         const data = await response.json();
-        console.log(data)
         this.setState({ ListOrder: data, loading: false });
     }
 }

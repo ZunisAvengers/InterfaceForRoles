@@ -82,6 +82,7 @@ namespace WebApp
             app.UseSpaStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

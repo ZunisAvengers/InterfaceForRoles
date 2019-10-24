@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import authService from './Identity';
+import identity from './Identity';
 
 export class AuthorizeMenu extends Component{
     constructor(props){
@@ -11,13 +11,18 @@ export class AuthorizeMenu extends Component{
             role: null,
             isAuthenticated: false
         }
+        this.onLogout = this.onLogout.bind(this)
     }
     componentWillMount(){
-        //var user = authService.getUser()
+        this._subscription = identity.subscribe(() => this.populateState());
+        this.populateState();
+    }
+    async populateState() {
+        const [isAuthenticated, login, role] = await Promise.all([identity._isAuthenticated, identity._login, identity._role])
         this.setState({
-            isAuthenticated: authService.isAuthenticated,
-            login: authService.login,
-            role: authService.role
+            isAuthenticated,
+            login,
+            role,
         });
     }
     render(){
@@ -27,14 +32,16 @@ export class AuthorizeMenu extends Component{
             return this.authenticatedView(this.state.login, this.state.role);
         }
     }
-
+    componentWillUnmount() {
+        identity.unsubscribe(this._subscription);
+    }
     authenticatedView(userName, userRole) {
         return (<Fragment>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/user-profile">Hello {userName}</NavLink>
+                <NavLink tag={Link} className="text-dark" to="">Hello {userName}</NavLink>
             </NavItem>
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to='/LogOut'>Logout</NavLink>
+                <NavLink tag={Link} className="text-dark" to="" onClick={this.onLogout}>Logout</NavLink>
             </NavItem>
         </Fragment>
         );
@@ -50,5 +57,8 @@ export class AuthorizeMenu extends Component{
             </NavItem>
         </Fragment>
         );        
+    }
+    onLogout(e){
+        identity.LogOut()
     }
 }
