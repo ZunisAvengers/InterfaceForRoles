@@ -13,7 +13,7 @@ export default class AuthorizeRoutes extends Component {
       <Fragment>
           <Route path="/authentication/Login" component={Login}/>
           <Route path="/authentication/Register" component={Register}/>
-          <Route path="/manager/List" component={ManagerOrderList}/>
+          <Route path="/authentication/List" component={ManagerOrderList}/>
       </Fragment>);
   }
 }

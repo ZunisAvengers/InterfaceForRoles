@@ -28,15 +28,16 @@ namespace WebApp.Controllers
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
             return order;
+
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
-        {
-            Order order = await _context.Orders
-                .FirstOrDefaultAsync(o => o.Id == id);
-            if (order != null) return order;
-            return NotFound();
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Order>> GetOrder(Guid id)
+        //{
+        //    Order order = await _context.Orders
+        //        .FirstOrDefaultAsync(o => o.Id == id);
+        //    if (order != null) return order;
+        //    return NotFound();
+        //}
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {

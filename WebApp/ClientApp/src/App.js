@@ -11,11 +11,10 @@ import './custom.css'
 
 export default class App extends Component {
   static displayName = App.name;
+
   componentWillMount(){
     identity.GetUser() 
   }
-  
-
   render () {
     return (
       <Layout>
@@ -23,6 +22,6 @@ export default class App extends Component {
         <AuthorizeRotePage path='/list-order' component={ListOrder} />
         <Route path='/authentication' component={AuthorizeRoutes} />
       </Layout>
-    );
+    )
   }
 }

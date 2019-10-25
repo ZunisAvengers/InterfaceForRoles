@@ -52,6 +52,7 @@ export class Identity {
         .then(info => {
             this.updateState(info.Login, info.Role)
         }) 
+        return false
     }
     LogOut(){
         localStorage.setItem("token", undefined)

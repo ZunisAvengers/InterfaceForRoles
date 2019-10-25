@@ -10,7 +10,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    [Route("api/Manager")]
+    [Route("api/manager")]
     [Authorize(Roles = "Manager")]
     [ApiController]
     public class ManagerController : ControllerBase
@@ -29,14 +29,14 @@ namespace WebApp.Controllers
                 .Where(o => o.State != State.InstallatingСompleted && o.State != State.WaitingForInstallation)
                 .ToListAsync();           
         }
-        [HttpGet("Workers")]
-        public async Task<IEnumerable<Worker>> GetWorkers()
-        {
-            return await _context.Workers
-                .Include(w => w.User)
-                .OrderBy(w => w.User.LastName)
-                .ToListAsync();
-        }
+        //[HttpGet("Workers")]
+        //public async Task<IEnumerable<Worker>> GetWorkers()
+        //{
+        //    return await _context.Workers
+        //        .Include(w => w.User)
+        //        .OrderBy(w => w.User.LastName)
+        //        .ToListAsync();
+        //}
         [HttpPost("SetDateInstallation")]
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {

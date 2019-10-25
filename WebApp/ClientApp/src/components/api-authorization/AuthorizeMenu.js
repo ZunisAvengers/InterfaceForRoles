@@ -58,7 +58,7 @@ export class AuthorizeMenu extends Component{
     managerView(){
         return(
             <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/manager/List" >Управление заказами</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/authentication/List" >Управление заказами</NavLink>
             </NavItem>
         )
     }
