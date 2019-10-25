@@ -23,10 +23,11 @@ namespace WebApp.Controllers
         public async Task<IEnumerable<Order>> GetOrders()
         {
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
-            return await _context.Orders
+            List<Order> order =  await _context.Orders
                 .Where(o => o.Customer == user)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
+            return order;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
@@ -40,7 +41,7 @@ namespace WebApp.Controllers
         public async Task<ActionResult<Order>> CreateOrder([FromBody]Order order)
         {
             order.DateOrder = DateTime.Now;
-            order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Login == User.Identity.Name);
+            order.Customer = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);

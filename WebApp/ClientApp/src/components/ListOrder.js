@@ -34,18 +34,17 @@ export class ListOrder extends Component{
             },
             body:data
         });
-        this.setState({loading:true})
-        
+        this.setState({loading:true})        
         setTimeout(this.setState({showCreate:false}),5000)
         this.loadOrders()
     }
     ShowCreateOrder(e){
-        if (this.state.showCreate == true) this.setState({showCreate: false})
+        if (this.state.showCreate === true) this.setState({showCreate: false})
         else this.setState({showCreate: true})
     }
     render(){
         let create = this.state.showCreate
-        ? <CreateOrder style="float:center" onCreate={this.onCreate}></CreateOrder>
+        ? <CreateOrder onCreate={this.onCreate}></CreateOrder>
         : <p></p>
         let contents = this.state.loading
         ? <p><em>Загрузка...</em></p>

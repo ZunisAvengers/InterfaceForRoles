@@ -7,7 +7,7 @@ export class Identity {
     _nextSubscriptionId = 0;
         
     async logIn(data){
-        const response = await fetch('api/identity',{
+        await fetch('api/identity',{
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -37,7 +37,7 @@ export class Identity {
                 "phone":data.phone
             })
         })
-        if (response.status != 415) this.logIn(data)
+        if (response.status !== 415) this.logIn(data)
         return response.status
     }
     async GetUser(){

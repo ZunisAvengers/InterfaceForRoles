@@ -15,10 +15,5 @@ namespace WebApp.Models
         public DateTime? DateInstalling { get; set; }
         public DateTime? DateCompliteInstalling { get; set; }
         public State State { get; set; }
-        public List<Worker> Workers { get; set; }
-        public Order()
-        {
-            Workers = new List<Worker>();
-        }
     }
 }

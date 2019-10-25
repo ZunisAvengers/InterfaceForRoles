@@ -8,7 +8,6 @@ import AuthorizeRoutes from './components/api-authorization/AuthorizeRoutes';
 import identity from './components/api-authorization/Identity'
 
 import './custom.css'
-import { async } from 'q';
 
 export default class App extends Component {
   static displayName = App.name;

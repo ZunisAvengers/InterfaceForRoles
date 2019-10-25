@@ -9,8 +9,9 @@ namespace WebApp.Models
     public class Worker 
     {
         [Key]
-        public Guid UserId { get; set; }
+        public Guid Id { get; set; }
+        public User User { get; set; }
         public string Specal { get; set; }
-        public Order? Order { get; set; }
+        //public Order? Order { get; set; }
     }
 }

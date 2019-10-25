@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-export class ManagerList extends Component{
+export class ManagerOrderList extends Component{
     constructor(props){
         super(props)
         this.state = {
@@ -13,5 +13,10 @@ export class ManagerList extends Component{
         this.onAllow = this.onAllow.bind(this)
     }
 
+    componentWillMount(){
 
+    }
+    async popularOrders(sortSetting){
+        //const respounce = await fetch('api/')
+    }
 }

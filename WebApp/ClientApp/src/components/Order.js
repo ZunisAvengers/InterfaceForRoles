@@ -22,6 +22,7 @@ export class Order extends Component{
             case 9 : month = "Окт";break;
             case 10 : month = "Ноя";break;
             case 11 : month = "Дек";break;
+            default: ;break
         }
         return date.getDate() + " " + month + " " + date.getFullYear()
     }
@@ -40,6 +41,7 @@ export class Order extends Component{
             break;
             case 5: orderState = "Заказ отклонен"; color="#e43f37"
             break;
+            default: ;break
         }
         return(
             <div className="div-order" style={{backgroundColor:color+'91',borderColor:color,}}>

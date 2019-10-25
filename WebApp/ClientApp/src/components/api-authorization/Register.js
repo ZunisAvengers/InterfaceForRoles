@@ -35,7 +35,7 @@ export class Register extends Component{
             lastName:this.state.lastName,
             phone:this.state.phone,
             }
-        var status = await identity.register(data)
+       await identity.register(data)
         //if (staus == 404)
     }
     static passwordIsValid(password){

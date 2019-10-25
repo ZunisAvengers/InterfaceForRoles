@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 
-export class Order extends Component{
+export class ManagerOrder extends Component{
     constructor(props){
         super(props)
         this.state={
             data:props.order,
             chek: false,
-            dateInstalization:null
+            dateInstalization:null,
+            dateCompliteInstalization:null
         }
         this.onDelete = this.onDelete.bind(this)
         this.onAllow = this.onAllow.bind(this)
         this.onInstalization = this.onInstalization.bind(this)
         this.onDateInstalization = this.onDateInstalization.bind(this)
-        this.onTeamInstalization = this.onTeamInstalization.bind(this)
+        this.onDateCompliteInstalization = this.onDateCompliteInstalization.bind(this)
         
     }
     static toDate(buf){
@@ -30,12 +31,17 @@ export class Order extends Component{
             case 9 : month = "Окт";break;
             case 10 : month = "Ноя";break;
             case 11 : month = "Дек";break;
+            default: ;break
         }
         return date.getDate() + " " + month + " " + date.getFullYear();
     }
 
     onAllow(e){
-        if (this.state.data.dateInstalling == null) this.setState({chek: this.state.chek ? false : true})
+        if (this.state.data.dateInstalling == null) {            
+            this.setState({
+                chek: this.state.chek ? false : true            
+            })
+        }
     }
 
     onDelete(e){
@@ -53,10 +59,11 @@ export class Order extends Component{
             break;
             case 3: orderState = "Установка завершена, происходит проверка"; color="#6fa6d6"
             break;
-            case 4: orderState = "Завершён!" + Order.toDate(this.state.data.dateCompliteInstalling) ; color="#37e43c"
+            case 4: orderState = "Завершён! " + Order.toDate(this.state.data.dateCompliteInstalling) ; color="#37e43c"
             break;
             case 5: orderState = "Заказ отклонен"; color="#e43f37"
             break;
+            default: ;break
         }
         let install = this.state.chek ? this.renderInstalization(this) : "";
         return(
@@ -79,14 +86,34 @@ export class Order extends Component{
             dateInstalization: e.target.value
         })
     }
-
-    static renderInstalization(e){
+    onDateCompliteInstalization(e){
+        this.setState({
+            dateCompliteInstalization: e.target.value
+        })
+    }
+    async loadWorkerList(){
+        var response = await fetch('api/manager/workers',{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Bearer ' + localStorage.token
+            }
+        })
+        this.setState({loadWorkers: false})
+        return response
+    }
+    renderInstalization(){        
         return(
-            <form>
+            <form onSubmit={this.onInstalization}>
                 <div>
                     <label>Выберете дату установки</label>
-                    <input type="date" onChange={e.onDateInstalization}></input>
+                    <input type="date" onChange={this.onDateInstalization}></input>  
                 </div>
+                <div>
+                    <label>Выберете дату завершения установки</label>               
+                    <input type="date" onChange={this.onDateCompliteInstalization}></input>     
+                </div>
+                <input className="btn btn-default" value="Принять" onClick={this.onAllow}></input>
             </form>
         )
     }

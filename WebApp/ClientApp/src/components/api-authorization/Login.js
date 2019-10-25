@@ -24,7 +24,7 @@ export class Login extends Component{
                 password: this.state.password
             }
             var status = await identity.logIn(data);
-            if (status == 404){
+            if (status === 404){
                 this.setState({userValid:false})    
             }else{
                 this.setState({Completed:true})
@@ -47,20 +47,20 @@ export class Login extends Component{
         var valid = this.validatePassword(password)
         this.setState({password: password, passwordValid: valid})
     }
-    static renderLogInForm(e){
-        var loginAlert = e.state.loginValid === true ? "" : "Укажите ваш логин";
-        var passwordAlert = e.state.passwordValid === true ? "" : "Укажите ваш пароль";
-        var userAlert = e.state.userValid === true ? "" : "Неверное имя пользователя или пароль";
+    renderLogInForm(){
+        var loginAlert = this.state.loginValid === true ? "" : "Укажите ваш логин";
+        var passwordAlert = this.state.passwordValid === true ? "" : "Укажите ваш пароль";
+        var userAlert = this.state.userValid === true ? "" : "Неверное имя пользователя или пароль";
         return(            
-                <form onSubmit={e.handleSubmit}>                    
+                <form onSubmit={this.handleSubmit}>                    
                         <div className="form-group">
                             <label className="control-label">Укажите ваш Логин:</label>
-                            <input type="text" className="form-control"  value={e.state.login} onChange={e.onLogin}/>
+                            <input type="text" className="form-control"  value={this.state.login} onChange={this.onLogin}/>
                             <span className="text-danger">{loginAlert}</span>
                         </div>
                         <div className="form-group">
                             <label className="control-label">Укажите ваш Пароль:</label>
-                            <input type="password" className="form-control"  value={e.state.password} onChange={e.onPassword}></input>
+                            <input type="password" className="form-control"  value={this.state.password} onChange={this.onPassword}></input>
                             <span className="text-danger">{passwordAlert}</span>
                         </div>
                         <span className="text-danger">{userAlert}</span>
@@ -68,15 +68,15 @@ export class Login extends Component{
                 </form>            
         )
     }
-    static renderCompleted(){
+    renderCompleted(){
         return(
             <p><em>Форма успешно отправлена !</em></p>
         );
     }
     render(){
         let contents = this.state.Completed
-        ? Login.renderCompleted()
-        : Login.renderLogInForm(this) 
+        ? this.renderCompleted()
+        : this.renderLogInForm(this) 
         return(
             <center>
             <div className="row">

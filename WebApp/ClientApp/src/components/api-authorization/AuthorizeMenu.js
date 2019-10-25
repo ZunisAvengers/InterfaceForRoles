@@ -36,6 +36,13 @@ export class AuthorizeMenu extends Component{
         identity.unsubscribe(this._subscription);
     }
     authenticatedView(userName, userRole) {
+        let items
+        switch (this.state.role) {
+            case "Manager":
+                items = this.managerView()
+                break;
+            default:;break;
+        }
         return (<Fragment>
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="">Hello {userName}</NavLink>
@@ -43,8 +50,17 @@ export class AuthorizeMenu extends Component{
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="" onClick={this.onLogout}>Logout</NavLink>
             </NavItem>
+            {items}
         </Fragment>
         );
+    }
+
+    managerView(){
+        return(
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/manager/List" >Управление заказами</NavLink>
+            </NavItem>
+        )
     }
 
     anonymousView() {

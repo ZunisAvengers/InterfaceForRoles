@@ -43,7 +43,7 @@ export class CreateOrder extends Component{
         var planAlert = e.state.planValid === true ? "" : "Укажите вашу ситуацию";
         return(    
             
-                <div className="col-md-4">
+                <div className="col-md-4" style="float:center">
                     <form  onSubmit={e.handleSubmit}>
                         
                             <div className="form-group">
