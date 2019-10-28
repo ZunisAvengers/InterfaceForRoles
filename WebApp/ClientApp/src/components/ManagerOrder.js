@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import convert from './Convert'
 
 export class ManagerOrder extends Component{
     constructor(props){
         super(props)
         this.state={
             data:props.order,
-            chek: false,
+            checkState: false,
             dateInstalization:null,
             dateCompliteInstalization:null
         }
@@ -13,33 +14,12 @@ export class ManagerOrder extends Component{
         this.onAllow = this.onAllow.bind(this)
         this.onInstalization = this.onInstalization.bind(this)
         this.onDateInstalization = this.onDateInstalization.bind(this)
-        this.onDateCompliteInstalization = this.onDateCompliteInstalization.bind(this)
-        
+        this.onDateCompliteInstalization = this.onDateCompliteInstalization.bind(this)        
     }
-    toDate(buf){
-        var month = "",date = new Date(buf)
-        switch(date.getMonth()){
-            case 0 : month = "Янв";break;
-            case 1 : month = "Фев";break;
-            case 2 : month = "Мар";break;
-            case 3 : month = "Апр";break;
-            case 4 : month = "Май";break;
-            case 5 : month = "Июн";break;
-            case 6 : month = "Июл";break;
-            case 7 : month = "Авг";break;
-            case 8 : month = "Сен";break;
-            case 9 : month = "Окт";break;
-            case 10 : month = "Ноя";break;
-            case 11 : month = "Дек";break;
-            default: ;break
-        }
-        return date.getDate() + " " + month + " " + date.getFullYear();
-    }
-
     onAllow(e){
-        if (this.state.data.dateInstalling == null) {            
+        if (this.state.data.dateInstalling === null) {            
             this.setState({
-                chek: this.state.chek ? false : true            
+                checkState: this.state.checkState ? false : true            
             })
         }
     }
@@ -51,41 +31,35 @@ export class ManagerOrder extends Component{
 
 
     onInstalization(e){
-
+        const data = this.state.data
+        data.dateInstalization = this.state.dateInstalization
+        data.dateCompliteInstalization = this.state.dateCompliteInstalization
+        this.props.onInstalization(data);
     }
     render(){
-        var orderState, color = "";
-        switch(this.state.data.state){
-            case 0: orderState = "Ожидание обработки"; color="#c5c5c5"
-            break;
-            case 1: orderState = "Ожидание установки " + this.toDate(this.state.data.dateInstalling); color="#e1e437"
-            break;
-            case 2: orderState = "На данный момент происходит установка, день завершения: " + this.toDate(this.state.data.dateCompliteInstalling)+" (может изменятся)"; color="#e1e437"
-            break;
-            case 3: orderState = "Установка завершена, происходит проверка"; color="#6fa6d6"
-            break;
-            case 4: orderState = "Завершён! " + this.toDate(this.state.data.dateCompliteInstalling) ; color="#37e43c"
-            break;
-            case 5: orderState = "Заказ отклонен"; color="#e43f37"
-            break;
-            default: ;break
-        }
-        let install = this.state.chek ? this.renderInstalization(this) : "";
+        var conv = convert.toOrderState(this.state.data);
         return(
-            <div className="div-order" style={{backgroundColor:color+'91',borderColor:color,}}>
-                <p><b>Заказ от {this.toDate(this.state.data.dateOrder)}</b></p>
+            <div className="div-order" style={{backgroundColor:conv.color+'91',borderColor:conv.color}}>
+                <p><b>Заказ от {convert.toDate(this.state.data.dateOrder)}</b></p>
                 <p>Адрес: {this.state.data.address}</p>
                 <p>План: {this.state.data.plan.toString()}</p>
-                <p>Состояние заказа: {orderState}</p>
-                
-                <input className="btn btn-danger" value="Отменить" type="button" onClick={this.onDelete}></input>
-                <input className="btn btn-default" value="Принять" type="button" onClick={this.onAllow}></input>
-                
-                {install}
+                <p>Состояние заказа: {conv.orderState}</p>
+                {this.isInProgressing(this.state.data.state)}
             </div>
         );
     }
-
+    isInProgressing(state){
+        if (state === 0 ){
+            let install = this.state.checkState ? this.renderInstalization() : "";
+            return(
+            <div>
+                <input className="btn btn-danger" value="Отменить" type="button" onClick={this.onDelete}></input>
+                <input className="btn btn-default" value="Принять" type="button" onClick={this.onAllow}></input>
+                {install}
+            </div>)
+        }
+        else {return(<p></p>)}
+    }
     onDateInstalization(e){
         this.setState({
             dateInstalization: e.target.value

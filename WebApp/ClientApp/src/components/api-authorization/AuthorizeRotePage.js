@@ -18,7 +18,7 @@ export class AuthorizeRotePage extends Component {
     }
 
     componentWillUnmount() {
-        identity.unsubscribe(this._subscription);
+        //identity.unsubscribe(this._subscription);
     }
 
     render() {

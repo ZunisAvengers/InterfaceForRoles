@@ -7,11 +7,11 @@ namespace WebApp.Models
 {
     public enum State
     {
-        InProgressing,//-в обработке
-        WaitingForInstallation,//-ожидание установки
-        Installating,//-установка
-        InstallatingСompleted,//-установка выполнена
-        Completed,//-выполнена (и проверено)
-        Canceled//- отменено
+        InProgressing,          //-в обработке
+        WaitingForInstallation, //-ожидание установки
+        Installating,           //-установка
+        InstallatingСompleted,  //-установка выполнена
+        Completed,              //-выполнена (и проверено)
+        Canceled                //- отменено
     }
 }

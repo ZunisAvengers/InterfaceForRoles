@@ -22,12 +22,10 @@ namespace WebApp.Controllers
         [HttpGet]
         public async Task<IEnumerable<Order>> GetOrders()
         {
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == User.Identity.Name);
-            List<Order> order =  await _context.Orders
-                .Where(o => o.Customer == user)
+            return await _context.Orders
+                .Where(o => o.Customer.Id.ToString() == User.Identity.Name)
                 .OrderByDescending(o => o.DateOrder)
                 .ToListAsync();
-            return order;
 
         }
         //[HttpGet("{id}")]

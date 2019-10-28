@@ -41,8 +41,7 @@ export class CreateOrder extends Component{
     static renderOrderForm(e){
         var addressAlert = e.state.addressValid === true ? "" : "Укажите ваш адрес";
         var planAlert = e.state.planValid === true ? "" : "Укажите вашу ситуацию";
-        return(    
-            
+        return(
                 <div className="col-md-4" style="float:center">
                     <form  onSubmit={e.handleSubmit}>
                         

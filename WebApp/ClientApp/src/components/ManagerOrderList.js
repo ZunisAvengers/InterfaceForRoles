@@ -27,8 +27,16 @@ export class ManagerOrderList extends Component{
            return{ orders: state.orders.filter(order => order.id !== e.id)}
         })
     }
-    onInstalization(e){
-
+    async onInstalization(e){
+        console.log(e)
+        await fetch('api/manager/SetDateInstallation',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8',
+                'Authorization': 'Bearer ' + localStorage.token
+            },
+            body: JSON.stringify(e)
+        })
     }
     componentWillMount(){
         this.popularOrders()
@@ -57,7 +65,7 @@ export class ManagerOrderList extends Component{
             </div>
         );
     }
-    async popularOrders(sortSetting){
+    async popularOrders(){
         const response = await fetch('api/manager/Orders',{
             method:'GET',
             headers: {

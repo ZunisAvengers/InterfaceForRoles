@@ -23,20 +23,11 @@ namespace WebApp.Controllers
         [HttpGet("Orders")]
         public async Task<IEnumerable<Order>> GetOrders()
         {
-            return await _context.Orders
-                .Include(o => o.Customer)
+            IEnumerable<Order> orders = await _context.Orders
                 .OrderByDescending(o => o.DateOrder)
-                .Where(o => o.State != State.InstallatingСompleted && o.State != State.WaitingForInstallation)
-                .ToListAsync();           
+                .ToArrayAsync();
+            return orders;
         }
-        //[HttpGet("Workers")]
-        //public async Task<IEnumerable<Worker>> GetWorkers()
-        //{
-        //    return await _context.Workers
-        //        .Include(w => w.User)
-        //        .OrderBy(w => w.User.LastName)
-        //        .ToListAsync();
-        //}
         [HttpPost("SetDateInstallation")]
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {

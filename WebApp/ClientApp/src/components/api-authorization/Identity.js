@@ -4,7 +4,7 @@ export class Identity {
     _isAuthenticated = false;
     //claim = null;
     _callbacks = [];
-    _nextSubscriptionId = 0;
+    _nextSubscriptionId = 1;
         
     async logIn(data){
         await fetch('api/identity',{
