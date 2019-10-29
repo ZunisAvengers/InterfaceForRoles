@@ -10,6 +10,7 @@ namespace WebApp.Models
     {
         [Key]
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public User User { get; set; }
         public string Specal { get; set; }
         //public Order? Order { get; set; }

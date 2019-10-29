@@ -11,7 +11,7 @@ export class ManagerOrderList extends Component{
             sortDate:null
         }
         this.onDelete = this.onDelete.bind(this)        
-        this.onInstalization = this.onInstalization.bind(this)
+        this.onInstalling = this.onInstalling.bind(this)
     }
 
     async onDelete(e){
@@ -23,11 +23,13 @@ export class ManagerOrderList extends Component{
             },
             body:JSON.stringify(e)
         })
-        this.setState((state)=>{
-           return{ orders: state.orders.filter(order => order.id !== e.id)}
-        })
+        // this.setState((state)=>{
+        //    return{ orders: state.orders.filter(order => order.id !== e.id)}
+        // })
+        this.setState({loading:true})
+        this.popularOrders()
     }
-    async onInstalization(e){
+    async onInstalling(e){
         console.log(e)
         await fetch('api/manager/SetDateInstallation',{
             method:'POST',
@@ -37,16 +39,18 @@ export class ManagerOrderList extends Component{
             },
             body: JSON.stringify(e)
         })
+        this.setState({loading:true})
+        this.popularOrders()
     }
     componentWillMount(){
         this.popularOrders()
     }
 
-    renderList(){
+    renderOrderList(){
         return(
             <div>
                 {this.state.orders.map(order =>
-                    <ManagerOrder key={order.id} order={order} onDelete={this.onDelete}></ManagerOrder>
+                    <ManagerOrder key={order.id} order={order} onDelete={this.onDelete} onInstalling={this.onInstalling}></ManagerOrder>
                     )}
             </div>
         )
@@ -54,7 +58,7 @@ export class ManagerOrderList extends Component{
     render(){
         let contents = this.state.loading
         ? <p><em>Загрузка...</em></p>
-        : this.renderList()
+        : this.renderOrderList()
         
         return(
             <div>
@@ -74,6 +78,7 @@ export class ManagerOrderList extends Component{
             }
         });
         const data = await response.json();
+        
         this.setState({ orders: data, loading: false });
     }
 }

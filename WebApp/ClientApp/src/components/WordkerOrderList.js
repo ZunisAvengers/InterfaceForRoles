@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class WordkerOrders extends Component{
+export class WordkerOrderList extends Component{
     constructor(props){
         super(props)
         this.state = {

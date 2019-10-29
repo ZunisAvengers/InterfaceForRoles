@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
+using WebApp.ViewModel;
 
 namespace WebApp.Controllers
 {
@@ -21,17 +22,21 @@ namespace WebApp.Controllers
             _context = context;
         }
         [HttpGet("Orders")]
-        public async Task<IEnumerable<Order>> GetOrders()
+        public async Task<IEnumerable<ManagerOrderView>> GetOrders()
         {
-            IEnumerable<Order> orders = await _context.Orders
+            List<Order> orders = await _context.Orders
+                .Include(o => o.Customer)
                 .OrderByDescending(o => o.DateOrder)
-                .ToArrayAsync();
-            return orders;
+                .ToListAsync();
+            List<ManagerOrderView> orderView = new List<ManagerOrderView>();
+            foreach(var order in orders) 
+                orderView.Add(new ManagerOrderView(order));
+            return orderView.ToArray();
         }
         [HttpPost("SetDateInstallation")]
         public async Task<ActionResult> SetDateInstallation([FromBody] Order order)
         {
-            order.State = State.Installating;
+            order.State = State.WaitingForInstallation;
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
             return Ok();
@@ -44,5 +49,7 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        //[HttpGet("Workers")]
+        //public async Task<>
     }
 }

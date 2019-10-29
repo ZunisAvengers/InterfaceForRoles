@@ -14,7 +14,7 @@ export class CreateOrder extends Component{
         this.onPlan = this.onPlan.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    async handleSubmit(e){
+    handleSubmit(e){
         e.preventDefault()
         if (this.state.addressValid === true && this.state.planValid === true){
             let data = JSON.stringify({"address":this.state.Address, "plan":this.state.Plan});
@@ -38,39 +38,31 @@ export class CreateOrder extends Component{
         var valid = this.validatePlan(plan)
         this.setState({Plan: plan, planValid: valid})
     }
-    static renderOrderForm(e){
-        var addressAlert = e.state.addressValid === true ? "" : "Укажите ваш адрес";
-        var planAlert = e.state.planValid === true ? "" : "Укажите вашу ситуацию";
+    renderOrderForm(){
+        var addressAlert = this.state.addressValid === true ? "" : "Укажите ваш адрес";
+        var planAlert = this.state.planValid === true ? "" : "Укажите вашу ситуацию";
         return(
-                <div className="col-md-4" style="float:center">
-                    <form  onSubmit={e.handleSubmit}>
+                <div className="col-md-4">
+                    <form  onSubmit={this.handleSubmit}>
                         
                             <div className="form-group">
                                 <label className="control-label">Укажите ваш Адрес:</label>
-                                <input type="text" className="form-control"  value={e.state.Address} onChange={e.onAddress}/>
+                                <input type="text" className="form-control"  value={this.state.Address} onChange={this.onAddress}/>
                                 <span className="text-danger">{addressAlert}</span>
                             </div>
                             <div className="form-group">
                                 <label className="control-label">Укажите что нужно сделать:</label>
-                                <textarea type="text" className="form-control"  value={e.state.Plan} onChange={e.onPlan}></textarea>
+                                <textarea type="text" className="form-control"  value={this.state.Plan} onChange={this.onPlan}></textarea>
                                 <span className="text-danger">{planAlert}</span>
                             </div>
                             <input type="submit" value="Заказать"/>
                         
                     </form>
                 </div>
-
         )
     }
-    static renderCompleted(){
-        return(
-            <p><em>Форма успешно отправлена !</em></p>
-        );
-    }
     render(){
-        let contents = this.state.Completed
-        ? CreateOrder.renderCompleted()
-        : CreateOrder.renderOrderForm(this) 
+        let contents = this.renderOrderForm() 
         return(
             <center>
                 {contents}

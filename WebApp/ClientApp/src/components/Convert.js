@@ -38,7 +38,10 @@ export class Convert {
         }
         return {orderState, color}
     }
-
+    // toDateForInput(data){
+    //     var date = new Date(data)
+    //     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+    // }
     static get instance() { return Convert }
 }
 

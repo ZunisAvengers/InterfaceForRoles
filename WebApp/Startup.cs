@@ -58,7 +58,7 @@ namespace WebApp
 
                         ValidateLifetime = true,
 
-                        ClockSkew = TimeSpan.FromSeconds(15)
+                        ClockSkew = TimeSpan.FromSeconds(3)
                     };
                 });
         }

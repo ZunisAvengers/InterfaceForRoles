@@ -41,21 +41,32 @@ export class AuthorizeMenu extends Component{
             case "Manager":
                 items = this.managerView()
                 break;
+            case "Workman":
+                items = this.workmanView()
+                break;
             default:;break;
         }
         return (<Fragment>
+            {items}
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="">Hello {userName}</NavLink>
             </NavItem>
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="" onClick={this.onLogout}>Logout</NavLink>
-            </NavItem>
-            {items}
+            </NavItem>            
         </Fragment>
         );
     }
 
     managerView(){
+        return(
+            <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/authentication/List" >Управление заказами</NavLink>
+            </NavItem>
+        )
+    }
+
+    workmanView(){
         return(
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/authentication/List" >Управление заказами</NavLink>

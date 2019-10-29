@@ -34,13 +34,11 @@ export class ListOrder extends Component{
             },
             body:data
         });
-        this.setState({loading:true})        
-        setTimeout(this.setState({showCreate:false}),5000)
+        this.setState({loading:true})
         this.loadOrders()
     }
     ShowCreateOrder(e){
-        if (this.state.showCreate === true) this.setState({showCreate: false})
-        else this.setState({showCreate: true})
+        this.setState({showCreate: this.state.showCreate ? false : true})
     }
     render(){
         let create = this.state.showCreate
