@@ -21,11 +21,13 @@ namespace WebApp.Controllers
         {
             _context = context;
         }
-        /*[HttpGet("Orders")]
+        [HttpGet("Orders")]
         public async Task<IEnumerable<Order>> OrdersGet()
         {
             return await _context.Orders
                 .Where(o => o.State == State.Installating)
-        }*/
+                .OrderByDescending(o => o.DateOrder)
+                .ToArrayAsync();
+        }
     }
 }

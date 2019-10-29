@@ -49,7 +49,30 @@ namespace WebApp.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        //[HttpGet("Workers")]
-        //public async Task<>
+
+        [HttpGet("Workers")]
+        public async Task<ActionResult<User>> RegisterWorker([FromBody] RegisterWorkerViewModel model)
+        {
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
+            if (user != null) return BadRequest();
+            user = new User
+            {
+                Login = model.Login,
+                Password = model.Password,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Phone = model.Phone,
+                Role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Workman")
+            };
+            _context.Users.Add(user);
+            _context.Workers.Add(new Worker
+            {
+                Specal = model.Specal,
+                User = user,
+                UserId = user.Id
+            });
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }
